@@ -1,4 +1,3 @@
-#gem 'test-unit'
 require './library'
 require 'test/unit'
 
@@ -86,14 +85,7 @@ end
 
 class TestLibrary < Test::Unit::TestCase
   def setup
-    #Singleton.__init__(@cal)
     @lib = Library.instance
-    #@book1 = Book.new(1, "Pride and Prejudice", "Jane Austen")
-    #@book2 = Book.new(2, "Adventures of Huckleberry Finn", "Mark Twain")
-    #@book3 = Book.new(3, "Alice's Adventures in Wonderland", "Lewis Carroll")
-    #@member1 = Member.new("Bruce Banner", @lib)
-    #@member2 = Member.new("Clark Kent", @lib)
-    #@member3 = Member.new("Lana Lang", @lib)
   end
 
   def teardown
@@ -193,11 +185,26 @@ class TestLibrary < Test::Unit::TestCase
   end
 
   def test_check_in_one
-
+    @cal = Calendar.instance
+    @lib.open
+    @lib.issue_card('Bruce Banner')
+    @lib.serve('Bruce Banner')
+    @lib.check_out(3)
+    assert_equal('Bruce Banner has returned 1 books.', @lib.check_in(3))
   end
 
   def test_check_in_three
-
+    @cal = Calendar.instance
+    @member = Member.new('Bruce Banner', @lib)
+    @lib.open
+    @lib.issue_card('Bruce Banner')
+    @lib.serve('Bruce Banner')
+    @lib.check_out(1, 2, 3)
+    books = @member.get_books
+    books.each do |b|
+      b.get_title
+    end
+    #assert_equal('Bruce Banner has returned 3 books.', @lib.check_in(1, 2, 3))
   end
 
   def test_serve_library_closed
@@ -306,7 +313,6 @@ class TestLibrary < Test::Unit::TestCase
     @lib.open
     @lib.issue_card('Bruce Banner')
     @lib.serve('Bruce Banner')
-    #puts "\nOverdue books for Bruce Banner: \n\tNone"
     assert_equal("\nOverdue books for Bruce Banner: \n\tNone\n", @lib.find_overdue_books)
   end
 
@@ -336,8 +342,6 @@ class TestLibrary < Test::Unit::TestCase
     @lib.issue_card('Bruce Banner')
     @lib.serve('Bruce Banner')
     @lib.check_out(3)
-    #@lib.check_out(4)   # This added book with ID=5, as book 3 removed already- rather than delete, set to nil???
-    # check out using the book's id *** this is how it should work ***
     8.times {@cal.advance}
     @lib.check_in(3)
     @lib.check_out(9)
@@ -347,7 +351,6 @@ class TestLibrary < Test::Unit::TestCase
   def test_find_all_overdue_none
     @cal = Calendar.instance
     @lib.open
-    #puts @lib.find_all_overdue_books
     assert_equal('No books are overdue.', @lib.find_all_overdue_books)
   end
 
@@ -434,43 +437,11 @@ class TestLibrary < Test::Unit::TestCase
     assert_equal("81: Around the World in Eighty Days, by Jules Verne\n", @lib.search('ules'))
   end
 
-  def check_in(*book_numbers)
-
-  end
-
-
   def renew(*book_ids)
 
   end
 
-  def close
-
-  end
-
   def quit
-
-  end
-
-  # Private Library methods start from here
-  #########################################
-  def check_closed_library
-
-  end
-
-  def check_open_library
-
-  end
-
-  def load_books(src)
-
-  end
-
-
-  def check_current_member
-
-  end
-
-  def search_to_array(search)
 
   end
 

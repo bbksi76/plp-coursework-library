@@ -186,7 +186,7 @@ class Library
     raise Exception, 'The library is not open.' unless @open
     raise Exception, 'No member is currently being served.' if @current_member == nil
     @members_books = @current_member.get_books
-    unless book_numbers.size >= 1         
+    unless book_numbers.size >= 1
       return 'You must check in at least one book.'
     else
       if @members_books.size < 1
