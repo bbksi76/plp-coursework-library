@@ -174,11 +174,31 @@ class TestLibrary < Test::Unit::TestCase
     assert_equal('No member is currently being served.', temp_exception.message)
   end
 
-  def test_check_in_less_1
+  def test_check_in_zero
+    @cal = Calendar.instance
+    @lib.open
+    @lib.issue_card('Bruce Banner')
+    @lib.serve('Bruce Banner')
+    assert_equal('You must check in at least one book.', @lib.check_in)
+  end
+
+  def test_check_in_invalid
+    @cal = Calendar.instance
+    @lib.open
+    @lib.issue_card('Bruce Banner')
+    @lib.serve('Bruce Banner')
+    @lib.check_out(1, 2)
+    temp_exception = assert_raise(Exception) {@lib.check_in(9999)}
+    assert_equal('The member does not have book 9999.', temp_exception.message)
+  end
+
+  def test_check_in_one
 
   end
 
+  def test_check_in_three
 
+  end
 
   def test_serve_library_closed
     @cal = Calendar.instance
